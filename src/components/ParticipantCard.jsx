@@ -3,6 +3,7 @@ import { Pizza, Plus, Minus, X, AlertCircle } from 'lucide-react';
 import { VALIDATION_RULES } from '../utils/validation';
 import { pizzaHaptics } from '../utils/hapticFeedback';
 import { usePizzaSwipeGestures } from '../hooks/useSwipeGestures';
+import EditableName from './EditableName';
 
 function ParticipantCard({ 
   participant, 
@@ -10,7 +11,9 @@ function ParticipantCard({
   isLeader, 
   onUpdateCount, 
   onTogglePenalty, 
-  onRemove 
+  onRemove,
+  onEditName,
+  existingNames = []
 }) {
   // Swipe gesture handlers
   const handleIncrement = () => {
@@ -70,7 +73,12 @@ function ParticipantCard({
 
       {/* Name and Position */}
       <div className="text-center mb-4">
-        <h3 className="text-2xl font-bold text-gray-800">{participant.name}</h3>
+        <EditableName 
+          name={participant.name}
+          onSave={(newName) => onEditName(participant.id, newName)}
+          existingNames={existingNames}
+          className="justify-center"
+        />
         {participant.count > 0 && (
           <span className="text-sm text-gray-500">#{position}</span>
         )}

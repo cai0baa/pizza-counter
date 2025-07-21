@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { UserPlus, Share2 } from 'lucide-react';
 import AddParticipantForm from './AddParticipantForm';
+import ResetButton from './ResetButton';
 
 function ActionButtons({ 
   showAddForm, 
@@ -10,12 +11,17 @@ function ActionButtons({
   onNameChange,
   onAddParticipant,
   onCancelAdd,
-  onExportWhatsApp 
+  onExportWhatsApp,
+  onResetCounts,
+  onClearAll
 }) {
   const hasParticipantsWithCount = participants.length > 0 && participants.some(p => p.count > 0);
+  const hasActiveCompetition = participants.some(p => p.count > 0 || p.leftPieces);
 
   return (
-    <div className="mb-8 flex justify-center gap-4 flex-wrap">
+    <div className="mb-8 space-y-4">
+      {/* Main action buttons */}
+      <div className="flex justify-center gap-4 flex-wrap">
       {!showAddForm ? (
         <>
           <button
@@ -44,6 +50,17 @@ function ActionButtons({
           existingParticipants={participants}
         />
       )}
+      </div>
+      
+      {/* Reset button - separate row for better mobile layout */}
+      <div className="flex justify-center">
+        <ResetButton
+          onResetCounts={onResetCounts}
+          onClearAll={onClearAll}
+          participantCount={participants.length}
+          hasActiveCompetition={hasActiveCompetition}
+        />
+      </div>
     </div>
   );
 }
