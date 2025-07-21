@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { Pizza, Plus, Minus, X, AlertCircle } from 'lucide-react';
+import { memo, useState } from 'react';
+import { Pizza, Plus, Minus, X, AlertCircle, Edit2 } from 'lucide-react';
 import { VALIDATION_RULES } from '../utils/validation';
 import { pizzaHaptics } from '../utils/hapticFeedback';
 import { usePizzaSwipeGestures } from '../hooks/useSwipeGestures';
@@ -10,8 +10,11 @@ function ParticipantCard({
   isLeader, 
   onUpdateCount, 
   onTogglePenalty, 
-  onRemove 
+  onRemove,
+  onEditName 
 }) {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(participant.name);
   // Swipe gesture handlers
   const handleIncrement = () => {
     if (participant.count >= VALIDATION_RULES.PIZZA_COUNT.MAX) {
@@ -36,6 +39,22 @@ function ParticipantCard({
     onDecrement: handleDecrement,
     enabled: true
   });
+
+  const handleNameEdit = () => {
+    setIsEditingName(true);
+  };
+
+  const handleNameSave = () => {
+    if (editedName.trim() && editedName.trim() !== participant.name) {
+      onEditName(participant.id, editedName.trim());
+    }
+    setIsEditingName(false);
+  };
+
+  const handleNameCancel = () => {
+    setEditedName(participant.name);
+    setIsEditingName(false);
+  };
   return (
     <div
       ref={touchRef}
@@ -70,7 +89,44 @@ function ParticipantCard({
 
       {/* Name and Position */}
       <div className="text-center mb-4">
-        <h3 className="text-2xl font-bold text-gray-800">{participant.name}</h3>
+        {isEditingName ? (
+          <div className="flex items-center justify-center gap-2">
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              className="text-2xl font-bold text-gray-800 text-center bg-transparent border-b-2 border-orange-500 outline-none"
+              style={{ width: `${Math.max(editedName.length, 8)}ch` }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') handleNameSave();
+                if (e.key === 'Escape') handleNameCancel();
+              }}
+              autoFocus
+            />
+            <button
+              onClick={handleNameSave}
+              className="text-green-500 hover:text-green-600"
+            >
+              ✓
+            </button>
+            <button
+              onClick={handleNameCancel}
+              className="text-red-500 hover:text-red-600"
+            >
+              ✗
+            </button>
+          </div>
+        ) : (
+          <div className="relative flex justify-center">
+            <h3 className="text-2xl font-bold text-gray-800">{participant.name}</h3>
+            <button
+              onClick={handleNameEdit}
+              className="absolute right-0 top-0 text-gray-400 hover:text-orange-500 transition-colors"
+            >
+              <Edit2 className="w-4 h-4" />
+            </button>
+          </div>
+        )}
         {participant.count > 0 && (
           <span className="text-sm text-gray-500">#{position}</span>
         )}
@@ -78,20 +134,20 @@ function ParticipantCard({
 
       {/* Pizza Count Display */}
       <div className="text-center mb-6">
-        <div className="text-6xl font-bold text-orange-500 mb-2">
+        <div className="text-6xl font-bold text-orange-500 mb-2 text-center">
           {participant.count}
         </div>
-        <div className="text-gray-600">fatias</div>
+        <div className="text-gray-600 text-center">fatias</div>
         
         {/* Swipe hint */}
         {!isSwiping && participant.count === 0 && (
-          <div className="text-xs text-gray-400 mt-2 animate-pulse">
+          <div className="text-xs text-gray-400 mt-2 animate-pulse text-center">
             👆 Toque ou deslize para contar
           </div>
         )}
         
         {isSwiping && (
-          <div className="text-xs text-blue-500 mt-2 font-medium">
+          <div className="text-xs text-blue-500 mt-2 font-medium text-center">
             🔄 Deslizando...
           </div>
         )}
@@ -174,7 +230,7 @@ function ParticipantCard({
       
       {/* Max reached indicator */}
       {participant.count >= VALIDATION_RULES.PIZZA_COUNT.MAX && (
-        <div className="text-center mt-2 text-xs text-orange-600 font-medium">
+        <div className="text-center mt-2 text-xs text-orange-600 font-medium text-center">
           🎆 MÁXIMO ATINGIDO! 🎆
         </div>
       )}

@@ -12,6 +12,7 @@ export default function PizzaCounter() {
     removeParticipant,
     updateCount,
     togglePenalty,
+    editParticipantName,
     leader,
     sortedParticipants
   } = useParticipants();
@@ -158,6 +159,7 @@ export default function PizzaCounter() {
               onUpdateCount={updateCount}
               onTogglePenalty={togglePenalty}
               onRemove={removeParticipant}
+              onEditName={editParticipantName}
             />
           ))}
         </div>

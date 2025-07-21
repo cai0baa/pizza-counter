@@ -44,6 +44,23 @@ export default function useParticipants() {
     ));
   }, [setParticipants]);
 
+  const editParticipantName = useCallback((id, newName) => {
+    const validation = validateParticipantName(newName);
+    const duplicateCheck = checkForDuplicateName(newName, participants.filter(p => p.id !== id));
+    
+    if (validation.isValid && !duplicateCheck.isDuplicate) {
+      setParticipants(prev => prev.map(p => 
+        p.id === id ? { ...p, name: validation.sanitized } : p
+      ));
+      return { success: true };
+    }
+    
+    return { 
+      success: false, 
+      errors: [...validation.errors, ...(duplicateCheck.error ? [duplicateCheck.error] : [])]
+    };
+  }, [participants, setParticipants]);
+
   // Memoize expensive calculations for mobile performance
   const leader = useMemo(() => {
     if (participants.length === 0) return null;
@@ -62,6 +79,7 @@ export default function useParticipants() {
     removeParticipant,
     updateCount,
     togglePenalty,
+    editParticipantName,
     leader,
     sortedParticipants
   };
