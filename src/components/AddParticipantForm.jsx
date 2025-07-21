@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus, X, AlertCircle } from 'lucide-react';
 import useValidation from '../hooks/useValidation';
 import { containsEmoji, getEmojiCount } from '../utils/validation';
+import { pizzaHaptics } from '../utils/hapticFeedback';
 
 export default function AddParticipantForm({ 
   newName, 
@@ -24,8 +25,11 @@ export default function AddParticipantForm({
     setShowValidation(true);
     
     if (validation.isValid) {
+      pizzaHaptics.participantAdded();
       onAdd(validation.sanitized);
       setShowValidation(false);
+    } else {
+      pizzaHaptics.validationError();
     }
   };
 
@@ -86,12 +90,20 @@ export default function AddParticipantForm({
           onClick={handleAdd}
           disabled={!newName.trim()}
           className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white p-2 rounded-lg transition"
+          style={{
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent'
+          }}
         >
           <Plus className="w-5 h-5" />
         </button>
         <button
           onClick={onCancel}
           className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition"
+          style={{
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent'
+          }}
         >
           <X className="w-5 h-5" />
         </button>

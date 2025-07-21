@@ -1,11 +1,9 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { validateParticipantName, validatePizzaCount, checkForDuplicateName } from '../utils/validation';
+import { useParticipantsStorage } from './useLocalStorage';
 
 export default function useParticipants() {
-  const [participants, setParticipants] = useState([
-    { id: 1, name: 'João', count: 0, leftPieces: false },
-    { id: 2, name: 'Maria', count: 0, leftPieces: false }
-  ]);
+  const [participants, setParticipants] = useParticipantsStorage();
 
   const addParticipant = useCallback((name) => {
     const validation = validateParticipantName(name);
@@ -23,11 +21,11 @@ export default function useParticipants() {
       success: false, 
       errors: [...validation.errors, ...(duplicateCheck.error ? [duplicateCheck.error] : [])]
     };
-  }, [participants]);
+  }, [participants, setParticipants]);
 
   const removeParticipant = useCallback((id) => {
     setParticipants(prev => prev.filter(p => p.id !== id));
-  }, []);
+  }, [setParticipants]);
 
   const updateCount = useCallback((id, delta) => {
     setParticipants(prev => prev.map(p => {
@@ -38,13 +36,13 @@ export default function useParticipants() {
       }
       return p;
     }));
-  }, []);
+  }, [setParticipants]);
 
   const togglePenalty = useCallback((id) => {
     setParticipants(prev => prev.map(p => 
       p.id === id ? { ...p, leftPieces: !p.leftPieces } : p
     ));
-  }, []);
+  }, [setParticipants]);
 
   // Memoize expensive calculations for mobile performance
   const leader = useMemo(() => {
@@ -52,11 +50,11 @@ export default function useParticipants() {
     return participants.reduce((prev, current) => 
       prev.count > current.count ? prev : current
     );
-  }, [participants]);
+  }, [participants, setParticipants]);
 
   const sortedParticipants = useMemo(() => {
     return [...participants].sort((a, b) => b.count - a.count);
-  }, [participants]);
+  }, [participants, setParticipants]);
 
   return {
     participants,
