@@ -4,7 +4,7 @@
   "description": "Aplicativo para competições de pizza com contador, ranking e compartilhamento",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "pizza_64.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
@@ -43,7 +43,7 @@
       "short_name": "Nova",
       "description": "Iniciar uma nova competição de pizza",
       "url": "/?action=new",
-      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "pizza-192.png", "sizes": "192x192" }]
     }
   ],
   "related_applications": [],
