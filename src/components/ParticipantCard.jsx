@@ -139,18 +139,6 @@ function ParticipantCard({
         </div>
         <div className="text-gray-600 text-center">fatias</div>
         
-        {/* Swipe hint */}
-        {!isSwiping && participant.count === 0 && (
-          <div className="text-xs text-gray-400 mt-2 animate-pulse text-center">
-            👆 Toque ou deslize para contar
-          </div>
-        )}
-        
-        {isSwiping && (
-          <div className="text-xs text-blue-500 mt-2 font-medium text-center">
-            🔄 Deslizando...
-          </div>
-        )}
         
         {/* Pizza Icons */}
         <div className="flex justify-center flex-wrap gap-1 mt-3 min-h-[40px]">
