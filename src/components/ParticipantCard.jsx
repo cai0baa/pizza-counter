@@ -240,13 +240,4 @@ function ParticipantCard({
 
 // Memoize component to prevent unnecessary re-renders
 // Only re-render when participant data, position, or leader status actually changes
-export default memo(ParticipantCard, (prevProps, nextProps) => {
-  return (
-    prevProps.participant.id === nextProps.participant.id &&
-    prevProps.participant.name === nextProps.participant.name &&
-    prevProps.participant.count === nextProps.participant.count &&
-    prevProps.participant.leftPieces === nextProps.participant.leftPieces &&
-    prevProps.position === nextProps.position &&
-    prevProps.isLeader === nextProps.isLeader
-  );
-});
+export default memo(ParticipantCard);
