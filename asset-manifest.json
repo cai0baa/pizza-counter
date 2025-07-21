@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/pizza-counter/static/css/main.c1217941.css",
+    "main.js": "/pizza-counter/static/js/main.7c1fe108.js",
+    "index.html": "/pizza-counter/index.html",
+    "main.c1217941.css.map": "/pizza-counter/static/css/main.c1217941.css.map",
+    "main.7c1fe108.js.map": "/pizza-counter/static/js/main.7c1fe108.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c1217941.css",
+    "static/js/main.7c1fe108.js"
+  ]
+}

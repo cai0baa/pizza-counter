@@ -1,0 +1,52 @@
+{
+  "short_name": "Pizza Counter",
+  "name": "Pizza Counter - Competição de Pizza",
+  "description": "Aplicativo para competições de pizza com contador, ranking e compartilhamento",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#f97316",
+  "background_color": "#fff7ed",
+  "categories": ["games", "entertainment", "social"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "scope": "/",
+  "id": "pizza-counter-app",
+  "screenshots": [
+    {
+      "src": "logo512.png",
+      "type": "image/png", 
+      "sizes": "512x512",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nova Competição",
+      "short_name": "Nova",
+      "description": "Iniciar uma nova competição de pizza",
+      "url": "/?action=new",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"]
+}
