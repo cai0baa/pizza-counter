@@ -10,11 +10,8 @@ export default function PizzaCounter() {
     participants,
     addParticipant,
     removeParticipant,
-    editParticipantName,
     updateCount,
     togglePenalty,
-    resetAllCounts,
-    clearAllParticipants,
     leader,
     sortedParticipants
   } = useParticipants();
@@ -40,21 +37,6 @@ export default function PizzaCounter() {
   const handleShowAddForm = useCallback(() => {
     setShowAddForm(true);
   }, []);
-
-  const handleResetCounts = useCallback(() => {
-    resetAllCounts();
-  }, [resetAllCounts]);
-
-  const handleClearAll = useCallback(() => {
-    clearAllParticipants();
-  }, [clearAllParticipants]);
-
-  const handleEditName = useCallback((id, newName) => {
-    return editParticipantName(id, newName);
-  }, [editParticipantName]);
-
-  // Get all existing names for duplicate checking
-  const existingNames = participants.map(p => p.name);
 
   const generateWhatsAppMessage = () => {
     const sorted = [...participants].sort((a, b) => b.count - a.count);
@@ -156,8 +138,6 @@ export default function PizzaCounter() {
           onAddParticipant={handleAddParticipant}
           onCancelAdd={handleCancelAdd}
           onExportWhatsApp={generateWhatsAppMessage}
-          onResetCounts={handleResetCounts}
-          onClearAll={handleClearAll}
         />
 
         {/* Participants Grid - Optimized for mobile performance */}
@@ -178,8 +158,6 @@ export default function PizzaCounter() {
               onUpdateCount={updateCount}
               onTogglePenalty={togglePenalty}
               onRemove={removeParticipant}
-              onEditName={handleEditName}
-              existingNames={existingNames}
             />
           ))}
         </div>

@@ -10,9 +10,4 @@ function App() {
   );
 }
 
-<div className="bg-red-500 text-white p-10">
-  If this is a red box with white text, Tailwind works!
-</div>
-
-
 export default App;

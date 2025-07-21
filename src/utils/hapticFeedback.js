@@ -147,14 +147,5 @@ export const pizzaHaptics = {
   exportCompleted: () => hapticFeedback.success(),
   
   // When validation fails
-  validationError: () => hapticFeedback.error(),
-  
-  // Important actions (reset, clear all)
-  importantAction: () => hapticFeedback.importantAction(),
-  
-  // Success actions (save, confirm)
-  success: () => hapticFeedback.success(),
-  
-  // Error actions
-  error: () => hapticFeedback.error()
+  validationError: () => hapticFeedback.error()
 };

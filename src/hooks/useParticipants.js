@@ -44,35 +44,6 @@ export default function useParticipants() {
     ));
   }, [setParticipants]);
 
-  const resetAllCounts = useCallback(() => {
-    setParticipants(prev => prev.map(p => ({
-      ...p,
-      count: 0,
-      leftPieces: false
-    })));
-  }, [setParticipants]);
-
-  const clearAllParticipants = useCallback(() => {
-    setParticipants([]);
-  }, [setParticipants]);
-
-  const editParticipantName = useCallback((id, newName) => {
-    const validation = validateParticipantName(newName);
-    const duplicateCheck = checkForDuplicateName(newName, participants, id);
-    
-    if (validation.isValid && !duplicateCheck.isDuplicate) {
-      setParticipants(prev => prev.map(p => 
-        p.id === id ? { ...p, name: validation.sanitized } : p
-      ));
-      return { success: true };
-    }
-    
-    return { 
-      success: false, 
-      errors: [...validation.errors, ...(duplicateCheck.error ? [duplicateCheck.error] : [])]
-    };
-  }, [participants, setParticipants]);
-
   // Memoize expensive calculations for mobile performance
   const leader = useMemo(() => {
     if (participants.length === 0) return null;
@@ -89,11 +60,8 @@ export default function useParticipants() {
     participants,
     addParticipant,
     removeParticipant,
-    editParticipantName,
     updateCount,
     togglePenalty,
-    resetAllCounts,
-    clearAllParticipants,
     leader,
     sortedParticipants
   };
