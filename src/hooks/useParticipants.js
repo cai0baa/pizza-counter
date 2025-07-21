@@ -50,11 +50,11 @@ export default function useParticipants() {
     return participants.reduce((prev, current) => 
       prev.count > current.count ? prev : current
     );
-  }, [participants, setParticipants]);
+  }, [participants]);
 
   const sortedParticipants = useMemo(() => {
     return [...participants].sort((a, b) => b.count - a.count);
-  }, [participants, setParticipants]);
+  }, [participants]);
 
   return {
     participants,
