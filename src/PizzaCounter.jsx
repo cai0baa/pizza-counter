@@ -19,11 +19,13 @@ export default function PizzaCounter() {
   const [newName, setNewName] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const handleAddParticipant = () => {
-    if (addParticipant(newName)) {
+  const handleAddParticipant = (sanitizedName) => {
+    const result = addParticipant(sanitizedName || newName);
+    if (result.success) {
       setNewName('');
       setShowAddForm(false);
     }
+    // If validation fails, AddParticipantForm will show the errors
   };
 
   const handleCancelAdd = () => {

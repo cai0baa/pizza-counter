@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { validateParticipantName, validatePizzaCount, checkForDuplicateName } from '../utils/validation';
 
 export default function useParticipants() {
   const [participants, setParticipants] = useState([
@@ -7,14 +8,21 @@ export default function useParticipants() {
   ]);
 
   const addParticipant = (name) => {
-    if (name.trim()) {
+    const validation = validateParticipantName(name);
+    const duplicateCheck = checkForDuplicateName(name, participants);
+    
+    if (validation.isValid && !duplicateCheck.isDuplicate) {
       setParticipants(prev => [
         ...prev,
-        { id: Date.now(), name: name.trim(), count: 0, leftPieces: false }
+        { id: Date.now(), name: validation.sanitized, count: 0, leftPieces: false }
       ]);
-      return true;
+      return { success: true };
     }
-    return false;
+    
+    return { 
+      success: false, 
+      errors: [...validation.errors, ...(duplicateCheck.error ? [duplicateCheck.error] : [])]
+    };
   };
 
   const removeParticipant = (id) => {
@@ -22,9 +30,14 @@ export default function useParticipants() {
   };
 
   const updateCount = (id, delta) => {
-    setParticipants(prev => prev.map(p => 
-      p.id === id ? { ...p, count: Math.max(0, p.count + delta) } : p
-    ));
+    setParticipants(prev => prev.map(p => {
+      if (p.id === id) {
+        const newCount = p.count + delta;
+        const validation = validatePizzaCount(newCount);
+        return { ...p, count: validation.sanitized };
+      }
+      return p;
+    }));
   };
 
   const togglePenalty = (id) => {

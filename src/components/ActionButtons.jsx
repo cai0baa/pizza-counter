@@ -40,6 +40,7 @@ export default function ActionButtons({
           onNameChange={onNameChange}
           onAdd={onAddParticipant}
           onCancel={onCancelAdd}
+          existingParticipants={participants}
         />
       )}
     </div>

@@ -1,4 +1,5 @@
 import { Pizza, Plus, Minus, X, AlertCircle } from 'lucide-react';
+import { VALIDATION_RULES } from '../utils/validation';
 
 export default function ParticipantCard({ 
   participant, 
@@ -67,18 +68,26 @@ export default function ParticipantCard({
       <div className="flex justify-center gap-4">
         <button
           onClick={() => onUpdateCount(participant.id, -1)}
-          className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full transition transform hover:scale-110 shadow-md"
-          disabled={participant.count === 0}
+          className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white p-3 rounded-full transition transform hover:scale-110 shadow-md disabled:transform-none disabled:cursor-not-allowed"
+          disabled={participant.count <= VALIDATION_RULES.PIZZA_COUNT.MIN}
         >
           <Minus className="w-6 h-6" />
         </button>
         <button
           onClick={() => onUpdateCount(participant.id, 1)}
-          className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full transition transform hover:scale-110 shadow-md"
+          className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-full transition transform hover:scale-110 shadow-md disabled:transform-none disabled:cursor-not-allowed"
+          disabled={participant.count >= VALIDATION_RULES.PIZZA_COUNT.MAX}
         >
           <Plus className="w-6 h-6" />
         </button>
       </div>
+      
+      {/* Max reached indicator */}
+      {participant.count >= VALIDATION_RULES.PIZZA_COUNT.MAX && (
+        <div className="text-center mt-2 text-xs text-orange-600 font-medium">
+          🎆 MÁXIMO ATINGIDO! 🎆
+        </div>
+      )}
     </div>
   );
 }
