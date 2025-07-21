@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/pizza-counter/static/css/main.0382e127.css",
-    "main.js": "/pizza-counter/static/js/main.5582afc1.js",
+    "main.css": "/pizza-counter/static/css/main.68408529.css",
+    "main.js": "/pizza-counter/static/js/main.2559cfd1.js",
     "index.html": "/pizza-counter/index.html",
-    "main.0382e127.css.map": "/pizza-counter/static/css/main.0382e127.css.map",
-    "main.5582afc1.js.map": "/pizza-counter/static/js/main.5582afc1.js.map"
+    "main.68408529.css.map": "/pizza-counter/static/css/main.68408529.css.map",
+    "main.2559cfd1.js.map": "/pizza-counter/static/js/main.2559cfd1.js.map"
   },
   "entrypoints": [
-    "static/css/main.0382e127.css",
-    "static/js/main.5582afc1.js"
+    "static/css/main.68408529.css",
+    "static/js/main.2559cfd1.js"
   ]
 }
