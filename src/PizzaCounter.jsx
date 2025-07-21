@@ -13,8 +13,13 @@ export default function PizzaCounter() {
     updateCount,
     togglePenalty,
     editParticipantName,
+    resetCounters,
+    resetEverything,
     leader,
-    sortedParticipants
+    sortedParticipants,
+    delayedSortedParticipants,
+    frozenLayout,
+    isUpdating
   } = useParticipants();
   
   const [newName, setNewName] = useState('');
@@ -139,6 +144,8 @@ export default function PizzaCounter() {
           onAddParticipant={handleAddParticipant}
           onCancelAdd={handleCancelAdd}
           onExportWhatsApp={generateWhatsAppMessage}
+          onResetCounters={resetCounters}
+          onResetEverything={resetEverything}
         />
 
         {/* Participants Grid - Optimized for mobile performance */}
@@ -150,18 +157,23 @@ export default function PizzaCounter() {
             willChange: 'contents' // Hint browser about dynamic content
           }}
         >
-          {sortedParticipants.map((participant, index) => (
-            <ParticipantCard
-              key={participant.id}
-              participant={participant}
-              position={index + 1}
-              isLeader={index === 0}
-              onUpdateCount={updateCount}
-              onTogglePenalty={togglePenalty}
-              onRemove={removeParticipant}
-              onEditName={editParticipantName}
-            />
-          ))}
+          {(isUpdating && frozenLayout.length > 0 ? frozenLayout : (delayedSortedParticipants.length > 0 ? delayedSortedParticipants : participants)).map((layoutParticipant) => {
+            // Always use the current participant data for instant updates
+            const currentParticipant = participants.find(p => p.id === layoutParticipant.id) || layoutParticipant;
+            const sortedIndex = sortedParticipants.findIndex(p => p.id === currentParticipant.id);
+            return (
+              <ParticipantCard
+                key={currentParticipant.id}
+                participant={currentParticipant}
+                position={sortedIndex + 1}
+                isLeader={sortedIndex === 0 && currentParticipant.count > 0}
+                onUpdateCount={updateCount}
+                onTogglePenalty={togglePenalty}
+                onRemove={removeParticipant}
+                onEditName={editParticipantName}
+              />
+            );
+          })}
         </div>
 
         {/* Empty State */}
