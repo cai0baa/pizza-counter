@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { validateParticipantName, validatePizzaCount, checkForDuplicateName } from '../utils/validation';
 
 export default function useParticipants() {
@@ -7,7 +7,7 @@ export default function useParticipants() {
     { id: 2, name: 'Maria', count: 0, leftPieces: false }
   ]);
 
-  const addParticipant = (name) => {
+  const addParticipant = useCallback((name) => {
     const validation = validateParticipantName(name);
     const duplicateCheck = checkForDuplicateName(name, participants);
     
@@ -23,13 +23,13 @@ export default function useParticipants() {
       success: false, 
       errors: [...validation.errors, ...(duplicateCheck.error ? [duplicateCheck.error] : [])]
     };
-  };
+  }, [participants]);
 
-  const removeParticipant = (id) => {
+  const removeParticipant = useCallback((id) => {
     setParticipants(prev => prev.filter(p => p.id !== id));
-  };
+  }, []);
 
-  const updateCount = (id, delta) => {
+  const updateCount = useCallback((id, delta) => {
     setParticipants(prev => prev.map(p => {
       if (p.id === id) {
         const newCount = p.count + delta;
@@ -38,24 +38,25 @@ export default function useParticipants() {
       }
       return p;
     }));
-  };
+  }, []);
 
-  const togglePenalty = (id) => {
+  const togglePenalty = useCallback((id) => {
     setParticipants(prev => prev.map(p => 
       p.id === id ? { ...p, leftPieces: !p.leftPieces } : p
     ));
-  };
+  }, []);
 
-  const getLeader = () => {
+  // Memoize expensive calculations for mobile performance
+  const leader = useMemo(() => {
     if (participants.length === 0) return null;
     return participants.reduce((prev, current) => 
       prev.count > current.count ? prev : current
     );
-  };
+  }, [participants]);
 
-  const getSortedParticipants = () => {
+  const sortedParticipants = useMemo(() => {
     return [...participants].sort((a, b) => b.count - a.count);
-  };
+  }, [participants]);
 
   return {
     participants,
@@ -63,7 +64,7 @@ export default function useParticipants() {
     removeParticipant,
     updateCount,
     togglePenalty,
-    getLeader,
-    getSortedParticipants
+    leader,
+    sortedParticipants
   };
 }

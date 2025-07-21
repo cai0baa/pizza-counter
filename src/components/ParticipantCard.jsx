@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { Pizza, Plus, Minus, X, AlertCircle } from 'lucide-react';
 import { VALIDATION_RULES } from '../utils/validation';
 
-export default function ParticipantCard({ 
+function ParticipantCard({ 
   participant, 
   position, 
   isLeader, 
@@ -11,9 +12,15 @@ export default function ParticipantCard({
 }) {
   return (
     <div
-      className={`bg-white rounded-xl shadow-lg p-6 transform transition hover:scale-105 ${
+      className={`bg-white rounded-xl shadow-lg p-6 will-change-transform transition-transform ${
         isLeader && participant.count > 0 ? 'ring-4 ring-yellow-400' : ''
       } ${participant.leftPieces ? 'ring-2 ring-red-400' : ''}`}
+      style={{
+        // Optimize for mobile performance
+        backfaceVisibility: 'hidden',
+        perspective: '1000px',
+        transformStyle: 'preserve-3d'
+      }}
     >
       {/* Remove button */}
       <button
@@ -64,19 +71,33 @@ export default function ParticipantCard({
         </button>
       </div>
 
-      {/* Control Buttons */}
+      {/* Control Buttons - Optimized for mobile touch */}
       <div className="flex justify-center gap-4">
         <button
           onClick={() => onUpdateCount(participant.id, -1)}
-          className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white p-3 rounded-full transition transform hover:scale-110 shadow-md disabled:transform-none disabled:cursor-not-allowed"
+          className="bg-red-500 hover:bg-red-600 active:bg-red-700 disabled:bg-gray-400 text-white p-4 rounded-full transition-colors shadow-lg disabled:cursor-not-allowed select-none"
           disabled={participant.count <= VALIDATION_RULES.PIZZA_COUNT.MIN}
+          style={{
+            // Better touch targets for mobile (44px minimum)
+            minWidth: '48px',
+            minHeight: '48px',
+            touchAction: 'manipulation', // Disable zoom on double-tap
+            WebkitTapHighlightColor: 'transparent' // Remove tap highlight
+          }}
         >
           <Minus className="w-6 h-6" />
         </button>
         <button
           onClick={() => onUpdateCount(participant.id, 1)}
-          className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-full transition transform hover:scale-110 shadow-md disabled:transform-none disabled:cursor-not-allowed"
+          className="bg-green-500 hover:bg-green-600 active:bg-green-700 disabled:bg-gray-400 text-white p-4 rounded-full transition-colors shadow-lg disabled:cursor-not-allowed select-none"
           disabled={participant.count >= VALIDATION_RULES.PIZZA_COUNT.MAX}
+          style={{
+            // Better touch targets for mobile (44px minimum)
+            minWidth: '48px',
+            minHeight: '48px',
+            touchAction: 'manipulation', // Disable zoom on double-tap
+            WebkitTapHighlightColor: 'transparent' // Remove tap highlight
+          }}
         >
           <Plus className="w-6 h-6" />
         </button>
@@ -91,3 +112,16 @@ export default function ParticipantCard({
     </div>
   );
 }
+
+// Memoize component to prevent unnecessary re-renders
+// Only re-render when participant data, position, or leader status actually changes
+export default memo(ParticipantCard, (prevProps, nextProps) => {
+  return (
+    prevProps.participant.id === nextProps.participant.id &&
+    prevProps.participant.name === nextProps.participant.name &&
+    prevProps.participant.count === nextProps.participant.count &&
+    prevProps.participant.leftPieces === nextProps.participant.leftPieces &&
+    prevProps.position === nextProps.position &&
+    prevProps.isLeader === nextProps.isLeader
+  );
+});

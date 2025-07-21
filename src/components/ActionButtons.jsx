@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { UserPlus, Share2 } from 'lucide-react';
 import AddParticipantForm from './AddParticipantForm';
 
-export default function ActionButtons({ 
+function ActionButtons({ 
   showAddForm, 
   participants, 
   newName,
@@ -46,3 +47,6 @@ export default function ActionButtons({
     </div>
   );
 }
+
+// Memoize to prevent re-renders when participants data hasn't changed
+export default memo(ActionButtons);

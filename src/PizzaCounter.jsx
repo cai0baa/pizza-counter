@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Pizza } from 'lucide-react';
 import ParticipantCard from './components/ParticipantCard';
 import ActionButtons from './components/ActionButtons';
@@ -12,26 +12,31 @@ export default function PizzaCounter() {
     removeParticipant,
     updateCount,
     togglePenalty,
-    getLeader,
-    getSortedParticipants
+    leader,
+    sortedParticipants
   } = useParticipants();
   
   const [newName, setNewName] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const handleAddParticipant = (sanitizedName) => {
+  // Memoize event handlers to prevent unnecessary re-renders on mobile
+  const handleAddParticipant = useCallback((sanitizedName) => {
     const result = addParticipant(sanitizedName || newName);
     if (result.success) {
       setNewName('');
       setShowAddForm(false);
     }
     // If validation fails, AddParticipantForm will show the errors
-  };
+  }, [addParticipant, newName]);
 
-  const handleCancelAdd = () => {
+  const handleCancelAdd = useCallback(() => {
     setShowAddForm(false);
     setNewName('');
-  };
+  }, []);
+
+  const handleShowAddForm = useCallback(() => {
+    setShowAddForm(true);
+  }, []);
 
   const generateWhatsAppMessage = () => {
     const sorted = [...participants].sort((a, b) => b.count - a.count);
@@ -107,8 +112,7 @@ export default function PizzaCounter() {
     window.open(whatsappUrl, '_blank');
   };
 
-  const leader = getLeader();
-  const sortedParticipants = getSortedParticipants();
+  // leader and sortedParticipants are now memoized in the hook
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-4">
@@ -129,15 +133,22 @@ export default function PizzaCounter() {
           showAddForm={showAddForm}
           participants={participants}
           newName={newName}
-          onShowAddForm={() => setShowAddForm(true)}
+          onShowAddForm={handleShowAddForm}
           onNameChange={setNewName}
           onAddParticipant={handleAddParticipant}
           onCancelAdd={handleCancelAdd}
           onExportWhatsApp={generateWhatsAppMessage}
         />
 
-        {/* Participants Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Participants Grid - Optimized for mobile performance */}
+        <div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          style={{
+            // Optimize grid for mobile rendering
+            contain: 'layout style', // CSS containment for better performance
+            willChange: 'contents' // Hint browser about dynamic content
+          }}
+        >
           {sortedParticipants.map((participant, index) => (
             <ParticipantCard
               key={participant.id}
